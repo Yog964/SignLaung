@@ -1,0 +1,8 @@
+Flask
+Flask-CORS
+joblib
+numpy
+mediapipe
+pillow
+opencv-python
+gunicorn
