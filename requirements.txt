@@ -6,3 +6,4 @@ mediapipe
 pillow
 opencv-python
 gunicorn
+requests
