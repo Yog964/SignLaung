@@ -6,10 +6,30 @@ import numpy as np
 import joblib
 import base64
 import io
+import os
+import requests  # <-- Import requests to download files
 from PIL import Image
 
 app = Flask(__name__)
 CORS(app)
+
+# Function to download model files if they don’t exist
+def download_model(file_url, file_name):
+    """Downloads a model file if not already present."""
+    if not os.path.exists(file_name):
+        print(f"Downloading {file_name} from {file_url}...")
+        response = requests.get(file_url)
+        with open(file_name, 'wb') as f:
+            f.write(response.content)
+        print(f"{file_name} downloaded successfully!")
+
+# URLs for the model files on GitHub
+VEG_MODEL_URL = "https://github.com/Yog964/SignLaung/raw/main/Veg2102.pkl"
+FRUIT_MODEL_URL = "https://github.com/Yog964/SignLaung/raw/main/Fruit2102.pkl"
+
+# Download models if missing
+download_model(VEG_MODEL_URL, "Veg2102.pkl")
+download_model(FRUIT_MODEL_URL, "Fruit2102.pkl")
 
 # Load models
 vegetable_model = joblib.load("Veg2102.pkl")
@@ -56,4 +76,5 @@ def predict():
     return jsonify({"action": action})
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 5000))  # Use Render's assigned port
+    app.run(host="0.0.0.0", port=port)
